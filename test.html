@@ -1,10 +1,5 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<canvas id="myChart" width="400" height="400"></canvas>
-
-</body>
 <head lang="en">
     <meta charset="UTF-8">
     <title>Dex Method Count</title>
@@ -15,33 +10,50 @@
         function color(index) {
             return colors[index % colors.length];
         }
+
+        function showChart(jsonData) {
+            var charData = [];
+            $.each(jsonData, function (i, node) {
+                charData.push({
+                    value: node.count,
+                    label: node.name,
+                    color: color(i),
+                    highlight: "#FF5A5E"
+                })
+            });
+
+            var options = {};
+            // Get context with jQuery - using jQuery's .get() method.
+            var ctx = $("#myChart").get(0).getContext("2d");
+            // This will get the first returned node in the jQuery collection.
+            var myChart = new Chart(ctx).Pie(charData, options);
+        }
+
+        function showList(jsonData) {
+
+        }
+
         $(function () {
             $.ajax({
                 url: 'data.json',
                 dataType: 'text',
                 success: function (data) {
                     var json = $.parseJSON(data);
-                    var charData = [];
+
                     var firstLevel = json.children;
 
-                    $.each(firstLevel, function (i, node) {
-                        charData.push({
-                            value: node.count,
-                            label: node.name,
-                            color: color(i),
-                            highlight: "#FF5A5E"
-                        })
-                    });
-
-                    var options = {};
-                    // Get context with jQuery - using jQuery's .get() method.
-                    var ctx = $("#myChart").get(0).getContext("2d");
-                    // This will get the first returned node in the jQuery collection.
-                    var myChart = new Chart(ctx).Pie(charData, options);
+                    showChart(firstLevel);
+                    showList(firstLevel)
                 }
             })
         });
 
     </script>
 </head>
+<body>
+
+<canvas id="myChart" width="400" height="400"></canvas>
+
+</body>
+
 </html>
