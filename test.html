@@ -17,27 +17,35 @@
     <script src="js/Chart.js"></script>
     <script src="js/jquery-2.1.3.min.js"></script>
     <script type="text/javascript">
+        var chart;
         var colors = ["#F7464A", "#46BFBD", "#FDB45C", "#D32F2F", "#512DA8", "#303F9F", "#E64A19"];
         function color(index) {
             return colors[index % colors.length];
         }
 
         function showChart(jsonDataArray) {
-            var charData = [];
-            $.each(jsonDataArray, function (i, node) {
-                charData.push({
-                    value: node.count,
-                    label: node.name,
-                    color: color(i),
-                    highlight: "#FF5A5E"
-                })
-            });
-
+            // Clear
+            if(chart) {
+                chart.destroy();
+            }
             var options = {};
             // Get context with jQuery - using jQuery's .get() method.
             var ctx = $("#myChart").get(0).getContext("2d");
             // This will get the first returned node in the jQuery collection.
-            var myChart = new Chart(ctx).Pie(charData, options);
+            chart = new Chart(ctx).Pie({}, options);
+            setChartData(jsonDataArray);
+        }
+
+        function setChartData(jsonDataArray) {
+            $.each(jsonDataArray, function (i, node) {
+                var dataItem = {
+                    value: node.count,
+                    label: node.name,
+                    color: color(i),
+                    highlight: "#FF5A5E"
+                };
+                chart.addData(dataItem);
+            });
         }
 
         function showList(jsonDataArray) {
@@ -57,11 +65,16 @@
                         .text(node.name+" - "+node.count)
                         .addClass("package")
                         .appendTo($li);
+
                 if(node.children.length>0) {
                     $li.addClass("has-children");
                     var $childUl = $('<ul/>')
                             .hide()
                             .appendTo($li);
+                    $a.click(function () {
+                        nodeClicked(node);
+                        expandChildList($childUl);
+                    });
                     generateList($childUl, node.children);
                 }else {
                     $li.addClass("no-children");
@@ -93,6 +106,11 @@
                 var $itemClicked = $(event.target);
                 expandChildList($itemClicked.next());
             })
+        }
+
+        function nodeClicked(node) {
+            console.log("nodeClicked: " + node.name);
+            showChart(node.children)
         }
     </script>
 </head>
