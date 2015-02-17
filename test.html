@@ -35,6 +35,7 @@
                     .appendTo($listRoot);
 
             generateList($list, jsonDataArray);
+            setListeners();
         }
 
         function generateList($listItem, nodeArray) {
@@ -43,10 +44,11 @@
                         .appendTo($listItem);
                 var $a = $('<a/>')
                         .text(node.name+" - "+node.count)
-                        .attr('href', '#')
+                        .addClass("package")
                         .appendTo($li);
                 if(node.children.length>0) {
                     var $childUl = $('<ul/>')
+                            .hide()
                             .appendTo($li);
                     generateList($childUl, node.children);
                 }
@@ -68,6 +70,16 @@
             })
         });
 
+        function expandChildList($ulChild) {
+            $ulChild.show();
+        }
+
+        function setListeners() {
+            $(".package").click(function(event) {
+                var $itemClicked = $(event.target);
+                expandChildList($itemClicked.next());
+            })
+        }
     </script>
 </head>
 <body>
