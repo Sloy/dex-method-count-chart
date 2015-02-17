@@ -11,9 +11,9 @@
             return colors[index % colors.length];
         }
 
-        function showChart(jsonData) {
+        function showChart(jsonDataArray) {
             var charData = [];
-            $.each(jsonData, function (i, node) {
+            $.each(jsonDataArray, function (i, node) {
                 charData.push({
                     value: node.count,
                     label: node.name,
@@ -29,8 +29,28 @@
             var myChart = new Chart(ctx).Pie(charData, options);
         }
 
-        function showList(jsonData) {
+        function showList(jsonDataArray) {
+            var $listRoot = $("#list-root");
+            var $list = $("<ul/>")
+                    .appendTo($listRoot);
 
+            generateList($list, jsonDataArray);
+        }
+
+        function generateList($listItem, nodeArray) {
+            $.each(nodeArray, function (i, node) {
+                var $li = $('<li/>')
+                        .appendTo($listItem);
+                var $a = $('<a/>')
+                        .text(node.name+" - "+node.count)
+                        .attr('href', '#')
+                        .appendTo($li);
+                if(node.children.length>0) {
+                    var $childUl = $('<ul/>')
+                            .appendTo($li);
+                    generateList($childUl, node.children);
+                }
+            });
         }
 
         $(function () {
@@ -53,6 +73,8 @@
 <body>
 
 <canvas id="myChart" width="400" height="400"></canvas>
+
+<div id="list-root"></div>
 
 </body>
 
