@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<canvas id="myChart" width="400" height="400"></canvas>
+
+</body>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Dex Method Count</title>
+    <script src="js/Chart.js"></script>
+    <script src="js/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript">
+        var colors = ["#F7464A","#46BFBD", "#FDB45C", "#D32F2F", "#512DA8", "#303F9F", "#E64A19"];
+        function color(index) {
+            return colors[index % colors.length];
+        }
+
+        var dexData = {"count":12305,"name":"","children":[{"count":11945,"name":"android","children":[{"count":6,"name":"accessibilityservice","children":[]},{"count":2,"name":"animation","children":[]},{"count":194,"name":"app","children":[]},{"count":194,"name":"content","children":[{"count":20,"name":"pm","children":[]},{"count":64,"name":"res","children":[]}]},{"count":29,"name":"database","children":[]},{"count":152,"name":"graphics","children":[{"count":45,"name":"drawable","children":[{"count":1,"name":"shapes","children":[]}]},{"count":3,"name":"pdf","children":[]}]},{"count":3,"name":"hardware","children":[{"count":3,"name":"display","children":[]}]},{"count":145,"name":"media","children":[{"count":51,"name":"session","children":[]}]},{"count":30,"name":"net","children":[]},{"count":110,"name":"os","children":[]},{"count":22,"name":"print","children":[{"count":5,"name":"pdf","children":[]}]},{"count":9,"name":"provider","children":[]},{"count":6,"name":"speech","children":[{"count":6,"name":"tts","children":[]}]},{"count":9971,"name":"support","children":[{"count":3,"name":"annotation","children":[]},{"count":6403,"name":"v4","children":[{"count":41,"name":"accessibilityservice","children":[]},{"count":1415,"name":"app","children":[]},{"count":227,"name":"content","children":[{"count":1,"name":"pm","children":[]},{"count":4,"name":"res","children":[]}]},{"count":3,"name":"database","children":[]},{"count":122,"name":"graphics","children":[{"count":96,"name":"drawable","children":[]}]},{"count":19,"name":"hardware","children":[{"count":19,"name":"display","children":[]}]},{"count":74,"name":"internal","children":[{"count":74,"name":"view","children":[]}]},{"count":584,"name":"media","children":[{"count":96,"name":"routing","children":[]},{"count":295,"name":"session","children":[]}]},{"count":64,"name":"net","children":[]},{"count":21,"name":"os","children":[]},{"count":81,"name":"print","children":[]},{"count":96,"name":"provider","children":[]},{"count":14,"name":"speech","children":[{"count":14,"name":"tts","children":[]}]},{"count":88,"name":"text","children":[]},{"count":264,"name":"util","children":[]},{"count":2234,"name":"view","children":[{"count":810,"name":"accessibility","children":[]}]},{"count":1055,"name":"widget","children":[]}]},{"count":3565,"name":"v7","children":[{"count":429,"name":"app","children":[]},{"count":15,"name":"appcompat","children":[]},{"count":2142,"name":"internal","children":[{"count":269,"name":"app","children":[]},{"count":3,"name":"text","children":[]},{"count":2,"name":"transition","children":[]},{"count":683,"name":"view","children":[{"count":587,"name":"menu","children":[]}]},{"count":1183,"name":"widget","children":[]}]},{"count":25,"name":"view","children":[]},{"count":954,"name":"widget","children":[]}]}]},{"count":32,"name":"text","children":[{"count":3,"name":"method","children":[]},{"count":2,"name":"style","children":[]}]},{"count":10,"name":"transition","children":[]},{"count":35,"name":"util","children":[]},{"count":681,"name":"view","children":[{"count":158,"name":"accessibility","children":[]},{"count":30,"name":"animation","children":[]},{"count":2,"name":"inputmethod","children":[]}]},{"count":3,"name":"webkit","children":[]},{"count":311,"name":"widget","children":[]}]},{"count":37,"name":"com","children":[{"count":37,"name":"fav24","children":[{"count":37,"name":"taskmanager","children":[{"count":5,"name":"data","children":[]},{"count":7,"name":"domain","children":[]},{"count":9,"name":"presentation","children":[]}]}]}]},{"count":309,"name":"java","children":[{"count":45,"name":"io","children":[]},{"count":149,"name":"lang","children":[{"count":2,"name":"ref","children":[]},{"count":14,"name":"reflect","children":[]}]},{"count":1,"name":"math","children":[]},{"count":1,"name":"nio","children":[]},{"count":113,"name":"util","children":[{"count":22,"name":"concurrent","children":[{"count":5,"name":"atomic","children":[]}]}]}]},{"count":12,"name":"org","children":[{"count":12,"name":"xmlpull","children":[{"count":12,"name":"v1","children":[]}]}]},{"count":2,"name":"","children":[]}]};
+
+        var charData = [];
+        var firstLevel = dexData.children;
+
+        $.each(firstLevel, function(i, node){
+            charData.push({
+                value: node.count,
+                label: node.name,
+                color: color(i),
+                highlight: "#FF5A5E"
+            })
+        });
+
+        $(function () {
+
+
+
+
+            var options = {};
+
+
+            // Get context with jQuery - using jQuery's .get() method.
+            var ctx = $("#myChart").get(0).getContext("2d");
+            // This will get the first returned node in the jQuery collection.
+            var myChart = new Chart(ctx).Pie(charData, options);
+
+        });
+
+    </script>
+</head>
+</html>
