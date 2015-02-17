@@ -75,6 +75,7 @@
         function color(index) {
             return colors[index % colors.length];
         }
+
         function colorHighlight(index) {
             return highlight(color(index), 20)
         }
@@ -128,8 +129,7 @@
                             .hide()
                             .appendTo($li);
                     $a.click(function () {
-                        nodeClicked(node);
-                        expandChildList($childUl);
+                        expandChildList($childUl, node);
                     });
                     generateList($childUl, node.children);
                 } else {
@@ -153,10 +153,6 @@
             })
         });
 
-        function expandChildList($ulChild) {
-            $ulChild.show();
-        }
-
         function setListeners() {
             $(".package").click(function (event) {
                 var $itemClicked = $(event.target);
@@ -164,8 +160,17 @@
             })
         }
 
+        function expandChildList($ulChild, node) {
+            nodeClicked(node);
+            // Ugly ignorant stuff
+            $ulChild.show();
+            $("ul").hide();
+            $("#list-root").find("> ul").show();
+            $ulChild.parents().show();
+            $ulChild.show();
+        }
+
         function nodeClicked(node) {
-            console.log("nodeClicked: " + node.name);
             showChart(node.children)
         }
     </script>
