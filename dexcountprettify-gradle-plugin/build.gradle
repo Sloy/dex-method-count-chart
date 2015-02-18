@@ -25,16 +25,17 @@ dependencies {
     compile gradleApi()
     compile localGroovy()
     compile 'com.android.tools.build:gradle:1.0.0'
-    compile 'com.sloydev:dex-method-counts:1.0.1-SNAPSHOT'
+    compile 'com.sloydev:dex-method-counts:1.0.1'
+    compile 'commons-io:commons-io:2.4'
 }
 
 group = 'com.sloydev'
-version = '1.0.0-SNAPSHOT'
+version = '0.1.0-SNAPSHOT'
 
 publish {
     userOrg = 'sloy'
     groupId = 'com.sloydev'
     artifactId = 'dexcountprettify-plugin'
-    version = '0.0.5'
+    version = '0.1.0'
     description = 'Wait for it'
 }

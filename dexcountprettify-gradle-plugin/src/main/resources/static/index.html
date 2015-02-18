@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Dex Method Count</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+    <style>
+        #title {
+            margin-bottom: 50px;
+        }
+
+        .has-children > span {
+            color: blue;
+        }
+
+        .has-children:hover > span {
+            color: orange;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script src="Chart.js"></script>
+    <script src="jquery-2.1.3.min.js"></script>
+    <script src="data.js"></script>
+    <script type="text/javascript">
+        var chart;
+        var red = "#bf616a",
+                blue = "#5B90BF",
+                orange = "#d08770",
+                yellow = "#ebcb8b",
+                green = "#a3be8c",
+                teal = "#96b5b4",
+                pale_blue = "#8fa1b3",
+                purple = "#b48ead",
+                brown = "#ab7967";
+
+        var colors = [
+            blue,
+            orange,
+            teal,
+            purple,
+            brown,
+            green
+        ];
+
+        function highlight(col, amt) {
+
+            var usePound = false;
+
+            if (col[0] == "#") {
+                col = col.slice(1);
+                usePound = true;
+            }
+
+            var num = parseInt(col,16);
+
+            var r = (num >> 16) + amt;
+
+            if (r > 255) r = 255;
+            else if  (r < 0) r = 0;
+
+            var b = ((num >> 8) & 0x00FF) + amt;
+
+            if (b > 255) b = 255;
+            else if  (b < 0) b = 0;
+
+            var g = (num & 0x0000FF) + amt;
+
+            if (g > 255) g = 255;
+            else if (g < 0) g = 0;
+
+            return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+
+        }
+
+        function color(index) {
+            return colors[index % colors.length];
+        }
+
+        function colorHighlight(index) {
+            return highlight(color(index), 20)
+        }
+
+        function showChart(jsonDataArray) {
+            // Clear
+            if (chart) {
+                chart.destroy();
+            }
+            var options = {animationSteps: 20, animationEasing: 'easeOut'};
+            // Get context with jQuery - using jQuery's .get() method.
+            var ctx = $("#myChart").get(0).getContext("2d");
+            // This will get the first returned node in the jQuery collection.
+            chart = new Chart(ctx).Pie({}, options);
+            setChartData(jsonDataArray);
+        }
+
+        function setChartData(jsonDataArray) {
+            $.each(jsonDataArray, function (i, node) {
+                var dataItem = {
+                    value: node.count,
+                    label: node.name,
+                    color: color(i),
+                    highlight: colorHighlight(i)
+                };
+                chart.addData(dataItem);
+            });
+        }
+
+        function showList(jsonDataArray) {
+            var $listRoot = $("#list-root");
+            var $list = $("<ul/>")
+                    .appendTo($listRoot);
+
+            generateList($list, jsonDataArray);
+            setListeners();
+        }
+
+        function generateList($listItem, nodeArray) {
+            $.each(nodeArray, function (i, node) {
+                var $li = $('<li/>')
+                        .appendTo($listItem);
+                var $a = $('<span/>')
+                        .text(node.name + " - " + node.count)
+                        .addClass("package")
+                        .appendTo($li);
+
+                if (node.children.length > 0) {
+                    $li.addClass("has-children");
+                    var $childUl = $('<ul/>')
+                            .hide()
+                            .appendTo($li);
+                    $a.click(function () {
+                        expandChildList($childUl, node);
+                    });
+                    generateList($childUl, node.children);
+                } else {
+                    $li.addClass("no-children");
+                }
+            });
+        }
+
+        $(function () {
+            var firstLevel = data.children;
+
+            showChart(firstLevel);
+            showList(firstLevel)
+        });
+
+        function setListeners() {
+            $(".package").click(function (event) {
+                var $itemClicked = $(event.target);
+                expandChildList($itemClicked.next());
+            })
+        }
+
+        function expandChildList($ulChild, node) {
+            nodeClicked(node);
+            // Ugly ignorant stuff
+            $ulChild.show();
+            $("ul").hide();
+            $("#list-root").find("> ul").show();
+            $ulChild.parents().show();
+            $ulChild.show();
+        }
+
+        function nodeClicked(node) {
+            showChart(node.children)
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+    <div id="title" class="row text-center">
+        <h1>Dex Count Report</h1>
+        <p>Can you improve it? Do it in <a href="https://github.com/Sloy/dex-method-count-chart">GitHub</a>!</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <canvas id="myChart" width="400" height="400"></canvas>
+        </div>
+        <div class="col-md-5">
+            <div id="list-root"></div>
+        </div>
+    </div>
+
+</div>
+</body>
+
+</html>
