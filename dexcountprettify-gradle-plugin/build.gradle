@@ -30,12 +30,12 @@ dependencies {
 }
 
 group = 'com.sloydev'
-version = '0.1.1-SNAPSHOT'
+version = '0.1.2-SNAPSHOT'
 
 publish {
     userOrg = 'sloy'
     groupId = 'com.sloydev'
     artifactId = 'dexcountprettify-plugin'
-    version = '0.1.1'
+    version = '0.1.2-SNAPSHOT'
     description = 'Wait for it'
 }
